@@ -2,7 +2,7 @@
 #define TESTGUILAYOUT_H
 
 #include <QtWidgets/QDialog>
-
+#include <QMultiMap>
 // forward declaration
 class QWidget;
 class QGroupBox;
@@ -24,16 +24,21 @@ class TestGuiLayout : public QDialog
 	Q_OBJECT
   public:
     TestGuiLayout(QWidget *parent = Q_NULLPTR);
-	public slots:
+
+		public slots:
 		//void highlightChecked(QListWidgetItem* item);
-		void savetest();   // do what??
-		void cancel(); // unselect what was selected by user
-		void open();   // open command file for reading
+		void savetest(); // do what??
+		void cancel();   // unselect what was selected by user
+		void open();     // open command file for reading
 	//	void selectedItem();
 		void clickedItem();
 		void currentUniteON();
+		void createBonReport();
 		void testItemClick(QTableWidgetItem* aItem);
   private:
+		// struct to hold data (bon livraison report )
+		using tplbonlivraison = std::tuple<QString, QString, double, short>;
+
     QListWidget* m_listWidget;
 		QTableWidget* m_tblWidget;
 		QStringList m_TableHeader;
@@ -61,24 +66,40 @@ class TestGuiLayout : public QDialog
 		void setUniteBox();
 		
 		// progress bar handler (move semantic)
-		void addProgressBar( QBoxLayout* w_vProgressBar, std::string&& aUniteNb);
+		void addProgressBar( QBoxLayout* w_vProgressBar, const std::string& aUniteNb);
 		void setHProgressBar();
 		void setListWidgetBox();
 		void setupViews();
 		void saveDataIntoTable();
 		void setTableWidgetBox();
+    // ...
+		void updateProgress();
+		void initProgressBar();
+
 		// ...
 		QBoxLayout* setBottomButtons();
 		// ...
 		void createConnections();
 		QGroupBox* createAnalyzerBox();
 		QGroupBox* createCreatorBox();
+		void populateTableWidget();
 		QPushButton* m_loadButton;
 		QPushButton* m_saveSelectBtn;
+		QPushButton* m_bonCreateReport;
 		int m_pbarmin = 0;
 		int m_pbarmax = 0;
+		int m_currowNoSelected;
 		QGroupBox* m_analyzerBox;
 		QGroupBox* m_creatorBox;
+		QString m_currUnityON;
+		// vector of all command fields that will be used 
+		// for a given row 
+		QVector<QVariant> m_vecVariant; 
+		tplbonlivraison m_bdBonFields; // testing 
+	  // key is the unit no and all values for report creation
+		QMultiMap<QString, tplbonlivraison> m_unitBonLivraisonData;
+		QStringList m_listUniteAvailable = { QString("Unit 1"), QString("Unit 2"),
+			QString("Unit 3"), QString("Unit 4"), QString("Unit 5") };
 };
 }
 #endif // TESTGUILAYOUT_H

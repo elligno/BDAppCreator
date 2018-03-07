@@ -29,7 +29,6 @@
 #include "testguilayout.h"
 
 namespace {
-	//
 	// Just some helpers to read file with data separated tab 
 	void split( const std::string &s, char delim, std::vector<std::string> &elems) {
 		std::stringstream ss;
@@ -112,7 +111,7 @@ namespace {
 
 namespace bdGui {
 	TestGuiLayout::TestGuiLayout(QWidget *parent /*= Q_NULLPTR*/)
-		: QDialog(parent),
+	: QDialog(parent),
 		m_listWidget(Q_NULLPTR),
 		m_tblWidget(Q_NULLPTR),
 		m_buttonBox(Q_NULLPTR),
@@ -126,31 +125,63 @@ namespace bdGui {
 		m_progressBarU5(Q_NULLPTR),
 		m_splitWidget(Q_NULLPTR),
 		m_listUnite(Q_NULLPTR),
-		m_saveSelectBtn(Q_NULLPTR)
+		m_saveSelectBtn(Q_NULLPTR),
+		m_bonCreateReport(Q_NULLPTR)
 	{
 		setWindowTitle("BdApp Bon De Livraison (creator)");
-#if 1
-		setupViews();
-#else
-		createListWidget();
-#endif
+
+		// set display formating (Widget table) 
+		setupViews(); 
+
 		// create all components for the GUI
 		createOtherWidgets();
 		createLayout();
 		createConnections();
 
-//		setGeometry(200,200,0,0);
+		// set config of the progress bar 
+		initProgressBar();
+	}
 
-		// set initial
-		m_progressBarU1->setValue(4);
+	// at the moment we support 4-5 unit just do a check on each of them
+	// call when user select to save selection
+	void TestGuiLayout::updateProgress()
+	{
+		if( m_currUnityON.compare(m_listUniteAvailable.at(0)) == 0) // identical
+		{
+			double w_val2Show = m_progressBarU1->value() + std::get<2>(m_bdBonFields);
+			m_progressBarU1->setValue(w_val2Show);
+		}
+		else if (m_currUnityON.compare(m_listUniteAvailable.at(1)) == 0)
+		{
+			double w_val2Show = m_progressBarU2->value() + std::get<2>(m_bdBonFields);
+			m_progressBarU2->setValue(w_val2Show);
+		}
+		else if (m_currUnityON.compare(m_listUniteAvailable.at(2)) == 0)
+		{
+			double w_val2Show = m_progressBarU3->value() + std::get<2>(m_bdBonFields);
+			m_progressBarU3->setValue(w_val2Show);
+		}
+		else if (m_currUnityON.compare(m_listUniteAvailable.at(3)) == 0)
+		{
+			double w_val2Show = m_progressBarU4->value() + std::get<2>(m_bdBonFields);
+			m_progressBarU4->setValue(w_val2Show);
+		}
+	}
 
-		// this will be implemented in the selection 
-		// of each command (save button in the BonLivraison)
-		// this correspond at Qty 
-		// just configuring the progress bar to display
+	// just configuring the progress bar to display
+	void TestGuiLayout::initProgressBar()
+	{
+		//
+		// Unit #1
+		//
 		if (!m_progressBarU1->isEnabled())
 		{
 			m_progressBarU1->setEnabled(true);
+		}
+		if (m_progressBarU1->value()!=0)
+		{
+			// set initial value
+			m_progressBarU1->setValue(0.);
 		}
 		if (m_progressBarU1->minimum() != 0)
 		{
@@ -161,43 +192,90 @@ namespace bdGui {
 			m_progressBarU1->setMaximum(10);
 		}
 
-		// m_progressBarU1->repaint(false);
-	// 	 m_progressBarU1->setVisible(true);
-	// 	 m_progressBarU1->setMaximum(10);
-	// 	 m_progressBarU1->setMinimum(0);
-	// 	 m_progressBarU1->setTextVisible(true);
-	// 	 m_progressBarU1->setFormat("Loading...");
-	// 	 m_progressBarU1->setAlignment(Qt::AlignCenter);
-	// 	 m_progressBarU1->setValue(4);
+		//
+		// Unit #2
+		//
+		if (!m_progressBarU2->isEnabled())
+		{
+			m_progressBarU2->setEnabled(true);
+		}
+		if (m_progressBarU2->value() != 0)
+		{
+			// set initial value
+			m_progressBarU2->setValue(0.);
+		}
+		if (m_progressBarU2->minimum() != 0)
+		{
+			m_progressBarU2->setMinimum(0);
+		}
+		if (m_progressBarU2->maximum() != 10)
+		{
+			m_progressBarU2->setMaximum(10);
+		}
 
-		 // set initial
-	// 	 m_progressBarU2->setValue(8);
-	// 
-	// 	 // just configuring the progress bar to display
-	// 	 if (!m_progressBarU2->isEnabled())
-	// 	 {
-	// 		 m_progressBarU2->setEnabled(true);
-	// 	 }
-	// 	 if (m_progressBarU2->minimum() != 0)
-	// 	 {
-	// 		 m_progressBarU2->setMinimum(0);
-	// 	 }
-	// 	 if (m_progressBarU2->maximum() != 10)
-	// 	 {
-	// 		 m_progressBarU2->setMaximum(10);
-	// 	 }
+		//
+		// Unit #3
+		//
+		if (!m_progressBarU3->isEnabled())
+		{
+			m_progressBarU3->setEnabled(true);
+		}
+		if (m_progressBarU3->value() != 0)
+		{
+			// set initial value
+			m_progressBarU3->setValue(0.);
+		}
+		if (m_progressBarU3->minimum() != 0)
+		{
+			m_progressBarU3->setMinimum(0);
+		}
+		if (m_progressBarU3->maximum() != 10)
+		{
+			m_progressBarU3->setMaximum(10);
+		}
 
+		//
+		// Unit #4
+		//
+		if (!m_progressBarU4->isEnabled())
+		{
+			m_progressBarU4->setEnabled(true);
+		}
+		if (m_progressBarU4->value() != 0)
+		{
+			// set initial value
+			m_progressBarU4->setValue(0.);
+		}
+		if (m_progressBarU4->minimum() != 0)
+		{
+			m_progressBarU4->setMinimum(0);
+		}
+		if (m_progressBarU4->maximum() != 10)
+		{
+			m_progressBarU4->setMaximum(10);
+		}
 	}
 
 	void TestGuiLayout::savetest()
 	{
-		//just testing some stuff
-		m_progressBarU1->setValue(1);
-	//	m_progressBarU2->setValue(4);
+		updateProgress();
 
+		//QMessageBox(tr("Delete it from table"));
+		QMessageBox msgBox;
+		msgBox.setWindowTitle("Delete Command");
+		msgBox.setText("Sure you want delete it?");
+		msgBox.setStandardButtons(QMessageBox::Yes);
+		msgBox.addButton(QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::No);
+		if (msgBox.exec() == QMessageBox::Yes) {
+			m_tblWidget->removeRow(m_currowNoSelected); // row number
+		}
+		else {
+			// do something else
+		}
 		// for now we are just testing, so we fill
 		// some data to test our implementation
-		createTableWidget();
+		//createTableWidget();
 	}
 
 	void TestGuiLayout::cancel()
@@ -205,12 +283,17 @@ namespace bdGui {
 		// not implemented yet
 	}
 
+	// loading commands form file (created by the parser)
 	void TestGuiLayout::open()
 	{
 		// for now we are just testing, so we fill
 		// some data to test our implementation
-//		createTableWidget();
-		m_read4test = readFileTab();
+#if 0
+		createTableWidget(); // testing purpose
+#else
+		m_read4test = readFileTab(); // from file
+		createTableWidget();
+#endif
 	}
 
 	void TestGuiLayout::clickedItem()
@@ -220,16 +303,63 @@ namespace bdGui {
 
 	void TestGuiLayout::currentUniteON()
 	{
+		// user change unity selection
 		int w_uniteCurrent = m_listUnite->currentIndex(); // user choice
-		QString w_uniteStr = m_listUnite->itemText(w_uniteCurrent);
-	//	m_activeAlgo = w_algoName.toStdString(); // set user choice as active 
-//		m_currentUnite = aTextChanged;
+		m_currUnityON = m_listUnite->itemText(w_uniteCurrent);
 	}
 
+	// create report for each transport unit
+	void TestGuiLayout::createBonReport()
+	{
+		//unite ON
+		QString w_uniteON = m_listUnite->currentText();
+
+		// If you want to retrieve all the values for a single key, 
+		// you can use values(const Key &key), which returns a QList<T>:
+
+		//QDir w_reportFolder; 
+		QString w_path = QDir::currentPath();
+		QString w_bonLivraisonFile = w_uniteON + "_BonLiveraison.txt";
+		QFileInfo w_fileRep(w_path, w_bonLivraisonFile);
+		// create a new file with the given name
+		QFile w_data(w_fileRep.absoluteFilePath());
+		QList<tplbonlivraison> values = m_unitBonLivraisonData.values(w_uniteON);
+		if (!w_fileRep.exists(w_bonLivraisonFile))
+		{
+			QTextStream out(&w_data);
+			// then create it write report
+			if (w_data.open(QFile::WriteOnly | QFile::Text))
+			{
+				for (int i = 0; i < values.size(); ++i)
+				{
+					tplbonlivraison w_val2File = values.at(i);
+					out << std::get<0>(w_val2File) << "\t" << std::get<1>(w_val2File) << "\t"
+						<< std::get<2>(w_val2File) << "\t" << std::get<3>(w_val2File) << "\t" << "\n";
+				}
+			}
+	  }
+		else
+		{
+			// open and append it
+			if( w_data.open(QFile::WriteOnly | QFile::Text | QFile::Append))
+			{
+				QTextStream out(&w_data);
+				for( int i = 0; i < values.size(); ++i)
+				{
+					tplbonlivraison w_val2File = values.at(i);
+					out << std::get<0>(w_val2File) << "\t" << std::get<1>(w_val2File) << "\t"
+						<< std::get<2>(w_val2File) << "\t" << std::get<3>(w_val2File) << "\t" << "\n";
+				}
+			}
+		}
+		w_data.close();
+	}
+
+	// selected a row with mouse
 	void TestGuiLayout::testItemClick( QTableWidgetItem * aItem)
 	{
 		QTableWidget*  w_tblWgt = aItem->tableWidget();
-		Q_ASSERT(w_tblWgt!=Q_NULLPTR);
+		Q_ASSERT(w_tblWgt != Q_NULLPTR);
 		QItemSelectionModel* select = w_tblWgt->selectionModel();
 		if( select->hasSelection())
 		{
@@ -237,53 +367,45 @@ namespace bdGui {
 			QModelIndexList w_mdl = select->selectedRows();
 			auto w_rowSiz = w_mdl.size();
 
-			int w_rowNo = aItem->row();
-			QVector<QVariant> w_cmd2Report; w_cmd2Report.reserve(w_tblWgt->columnCount());
+			m_currowNoSelected = aItem->row();
+			QVector<QVariant> w_cmd2Report; 
+			w_cmd2Report.reserve( w_tblWgt->columnCount());
+			// nor sure about this one
+			QMap<int, tplbonlivraison> w_checkMap;
+		
+			// fill the struct for report
 			for( auto col=0;col<w_tblWgt->columnCount();++col)
 			{
-				QTableWidgetItem* w_chckItem = w_tblWgt->item(w_rowNo, col);
+				QTableWidgetItem* w_chckItem = w_tblWgt->item(m_currowNoSelected, col);
 				QVariant w_val = w_chckItem->data(Qt::DisplayRole);
+				// BoDuc selection
+        if(col==1)
+        {
+					std::get<0>(m_bdBonFields) = w_val.toString();
+        }
+				else if (col == 4)
+				{
+					std::get<1>(m_bdBonFields) = w_val.toString();
+				}
+				else if (col == 5)
+				{
+					std::get<2>(m_bdBonFields) = w_val.toDouble();
+				}
+				else if (col == 6)
+				{
+					std::get<3>(m_bdBonFields) = w_val.toInt();
+				}
+
 				w_cmd2Report.push_back(w_val);
 				// add it to the list
 			}
-		
-			//unite ON
-			QString w_uniteON = m_listUnite->currentText();
-			//QDir w_reportFolder; 
-			QString w_path = QDir::currentPath();
-			QString w_bonLivraisonFile = w_uniteON + "_BonLiveraison_date.txt";
-			QFileInfo w_fileRep(w_path, w_bonLivraisonFile);
-			if( !w_fileRep.exists(w_bonLivraisonFile))
-			{
-				// create a new file with the given name
-				QFile w_data(w_fileRep.absoluteFilePath());
-				// then create it write report
-				if( w_data.open(QFile::WriteOnly | QFile::Text))
-				{
-					QTextStream out(&w_data);
-		//			QString w_tetsVar = w_cmd2Report[0].toString();
-				//	w_tetsVar.data()
-					out << w_cmd2Report[0].toString() << "\n";
-// 					<< " " << w_cmd2Report[1] << " " << w_cmd2Report[2] << " " << w_cmd2Report[3] << " "
-// 						<< w_cmd2Report[4] << " " << w_cmd2Report[5] << " " << w_cmd2Report[6]
-				}
-			}
-			else
-			{
-				// create a new file with the given name
-				QFile w_data(w_fileRep.absoluteFilePath());
 
-				// open and append it
-				if (w_data.open(QFile::WriteOnly | QFile::Text | QFile::Append))
-				{
-					QTextStream out(&w_data);
-				}
-			}
-
-			// we need to create or append info to "Unite1_BonLivraison_Date.txt" report
-		//	QString w_filePath = w_fileRep.absoluteFilePath();
-		
-			// remove all items for this row (removeCellWidget(row,col))
+			// just a test
+			w_checkMap.insert(m_currowNoSelected, m_bdBonFields);
+			// store all data selected by user to be retrieved 
+			// when creating bon de livraison (file format) 
+			// key is the unit name that is currently selected
+			m_unitBonLivraisonData.insert( m_currUnityON, m_bdBonFields);
 		}
 	}
 	void TestGuiLayout::createListWidget()
@@ -307,8 +429,9 @@ namespace bdGui {
 	}
 	void TestGuiLayout::setupViews()
 	{
-		m_tblWidget = new QTableWidget(200, 7, this); //
-		m_tblWidget->setHorizontalHeaderLabels(QStringList() << tr("No Command")
+		m_tblWidget = new QTableWidget(50, 7, this); //
+		m_tblWidget->setHorizontalHeaderLabels(QStringList() //<< tr("Selected")
+			<< tr("No Command")
 			<< tr("Shipped To")
 			<< tr("Delivery date")
 			<< tr("Product")
@@ -335,28 +458,22 @@ namespace bdGui {
 		const int currentRow = m_tblWidget->rowCount();
 		m_tblWidget->setRowCount(currentRow + 1);
 	}
+
 	void TestGuiLayout::createTableWidget()
 	{
-// 		QVector<QVariant> w_vecVariant;
-// 		w_vecVariant.reserve(7);
-// 		w_vecVariant.push_back(QVariant(QString("CO00473438")));
-// 		w_vecVariant.push_back(QVariant(QString("FERME ERILIS INC. 672 ACADEMIE,VICTORIAVILLE, Québec, G6R 0V2")));
-// 		w_vecVariant.push_back(QVariant(QString("2018/03/01")));
-// 		w_vecVariant.push_back(QVariant(23126212));
-// 		w_vecVariant.push_back(QVariant(QString("S SYNCHROMIX ERILIS C VR")));
-// 		w_vecVariant.push_back(QVariant(3.));
-// 		w_vecVariant.push_back(QVariant(1));
+#if 0
+		// fill table widget with data
+		populateTableWidget();
+#endif
 
-		auto i = 0;
+		auto i = 0; // create each row of the table
 		for( const QVector<QVariant>& w_vecVariant : m_read4test)
 		{
-		//}
-		QTableWidgetItem* myTableWidgetItem = Q_NULLPTR;
-// 		for (auto i = 0; i < m_tblWidget->rowCount(); ++i) // loop on file line number
-// 		{
-			for (auto j = 0; j < m_tblWidget->columnCount(); ++j)
+			QTableWidgetItem* myTableWidgetItem = Q_NULLPTR;
+			for( auto j = 0; j < m_tblWidget->columnCount(); ++j)
 			{
-				myTableWidgetItem = new QTableWidgetItem; // i am not sure about this one
+				myTableWidgetItem = new QTableWidgetItem;     // i am not sure about this one
+				//myTableWidgetItem->data(Qt::CheckStateRole);  // 
 				myTableWidgetItem->setData(Qt::DisplayRole, w_vecVariant[j]);
 				m_tblWidget->setItem(i, j, myTableWidgetItem);
 			}
@@ -393,16 +510,17 @@ namespace bdGui {
 		// List of unite available
 		QLabel* w_listUniteLabl = new QLabel(tr("Unite Selectionne"));
 		m_listUnite = new QComboBox;
-		QStringList w_listUniteAvailable = { QString("Unite1"), QString("Unite2"), 
-			QString("Unite3"), QString("Unite4"), QString("Unite5") };
 
-		m_listUnite->addItems(w_listUniteAvailable);
+		m_listUnite->addItems(m_listUniteAvailable);
 
 		QVBoxLayout* w_uniteComboBox = new QVBoxLayout;
 		w_uniteComboBox->addWidget(w_listUniteLabl);
 		w_uniteComboBox->addWidget(m_listUnite);
 		w_uniteComboBox->addStretch(3);
 		w_buttonsTop->addLayout(w_uniteComboBox);
+
+		int w_uniteCurrent = m_listUnite->currentIndex(); // user choice
+		m_currUnityON = m_listUnite->itemText(w_uniteCurrent);
 
 		QLabel* w_loadCmd = new QLabel(tr("Load Command Report"));
 		m_loadButton = new QPushButton(tr("Open")); // open file for reading command from report file 
@@ -417,8 +535,8 @@ namespace bdGui {
 		w_bonCreator->addWidget(w_createBon);
 // 		QComboBox* w_listCbox = new QComboBox;
 // 		w_listCbox->addItems(w_listUniteAvailable);
-		QPushButton* w_bonCree = new QPushButton("Proceed");
-		w_bonCreator->addWidget(w_bonCree);
+		m_bonCreateReport = new QPushButton("Proceed");
+		w_bonCreator->addWidget(m_bonCreateReport);
 		w_bonCreator->addStretch(2);
 		w_buttonsTop->addLayout(w_bonCreator);
 
@@ -437,6 +555,60 @@ namespace bdGui {
 		return m_creatorBox;
 	}
 
+	void TestGuiLayout::populateTableWidget()
+	{
+		// for now we are testing table widget functionality 
+		QVector<QVariant> w_vecVariant1;
+		w_vecVariant1.reserve(7);
+		w_vecVariant1.push_back(QVariant(QString("CO00473438")));
+		w_vecVariant1.push_back(QVariant(QString("FERME ERILIS INC. 672 ACADEMIE,VICTORIAVILLE, Québec, G6R 0V2")));
+		w_vecVariant1.push_back(QVariant(QString("2018/03/01")));
+		w_vecVariant1.push_back(QVariant(23126212));
+		w_vecVariant1.push_back(QVariant(QString("S SYNCHROMIX ERILIS C VR")));
+		w_vecVariant1.push_back(QVariant(3.));
+		w_vecVariant1.push_back(QVariant(1));
+		// fill the list of cmd
+		m_read4test.push_back(w_vecVariant1);
+
+		QVector<QVariant> w_vecVariant2;
+		w_vecVariant2.reserve(7);
+		w_vecVariant2.push_back(QVariant(QString("CO00401038")));
+		w_vecVariant2.push_back(QVariant(QString("Ferme Duno inc E-1. 485 ACADEMIE,Lyster, Québec, G0S 1V0")));
+		w_vecVariant2.push_back(QVariant(QString("2018/03/04")));
+		w_vecVariant2.push_back(QVariant(21126012));
+		w_vecVariant2.push_back(QVariant(QString("PORC LA COOP 6AA 0.4SE VE 0.21SAL C VR")));
+		w_vecVariant2.push_back(QVariant(1.5));
+		w_vecVariant2.push_back(QVariant(4));
+		// fill the list of cmd
+		m_read4test.push_back(w_vecVariant2);
+
+		QVector<QVariant> w_vecVariant3;
+		w_vecVariant3.reserve(7);
+		//w_vecVariant.push_back(QVariant(QString("Selected")));
+		w_vecVariant3.push_back(QVariant(QString("CO00435638")));
+		w_vecVariant3.push_back(QVariant(QString("Ferme Pomerleau& Frere. 72 Bois-Franc,VICTORIAVILLE, Québec, G6R 0V2")));
+		w_vecVariant3.push_back(QVariant(QString("2018/03/02")));
+		w_vecVariant3.push_back(QVariant(20126200));
+		w_vecVariant3.push_back(QVariant(QString("A PORC LC 6B 0.4SE VE C VR")));
+		w_vecVariant3.push_back(QVariant(2.));
+		w_vecVariant3.push_back(QVariant(2));
+		// fill the list of cmd
+		m_read4test.push_back(w_vecVariant3);
+
+		QVector<QVariant> w_vecVariant4;
+		w_vecVariant4.reserve(7);
+		//w_vecVariant.push_back(QVariant(QString("Selected")));
+		w_vecVariant4.push_back(QVariant(QString("CO00430602")));
+		w_vecVariant4.push_back(QVariant(QString("LES PORCHERIES IKCO SENC E-3. 123 blvd Gnogno, VICTORIAVILLE, Québec, G6R 0V2")));
+		w_vecVariant4.push_back(QVariant(QString("2018/03/02")));
+		w_vecVariant4.push_back(QVariant(26136812));
+		w_vecVariant4.push_back(QVariant(QString("A PORC LA COOP 3 0.4SE VE C VR")));
+		w_vecVariant4.push_back(QVariant(5.5));
+		w_vecVariant4.push_back(QVariant(1));
+		// fill the list of cmd
+		m_read4test.push_back(w_vecVariant4);
+	}
+	
 	void TestGuiLayout::createOtherWidgets()
 	{
 		// create the group box
@@ -469,7 +641,9 @@ namespace bdGui {
 #if 0
 		setUniteBox(); // create the display box that list unite of transport
 #endif
-		setHProgressBar(); // display the progress horizontally
+
+		// display the progress horizontally
+		setHProgressBar(); 
 		// main dialog
 		QVBoxLayout* w_mainLayout = new QVBoxLayout;
 		//w_mainLayout->addLayout(w_buttonsTop);
@@ -490,10 +664,10 @@ namespace bdGui {
 		// create a layout for progress bar in a vertical layout
 		QHBoxLayout* w_hProgressBar = new QHBoxLayout;
 
-		addProgressBar(w_hProgressBar, std::string("Unite 1"));
-		addProgressBar(w_hProgressBar, std::string("Unite 2"));
-		addProgressBar(w_hProgressBar, std::string("Unite 3"));
-		addProgressBar(w_hProgressBar, std::string("Unite 4"));
+		addProgressBar(w_hProgressBar, m_listUniteAvailable.at(0).toStdString().c_str());
+		addProgressBar(w_hProgressBar, m_listUniteAvailable.at(1).toStdString().c_str());
+		addProgressBar(w_hProgressBar, m_listUniteAvailable.at(2).toStdString().c_str());
+		addProgressBar(w_hProgressBar, m_listUniteAvailable.at(3).toStdString().c_str());
 		m_uniteBox->setLayout(w_hProgressBar);
 	}
 
@@ -506,44 +680,6 @@ namespace bdGui {
 		addProgressBar(w_vProgressBar, std::string("Unite 2"));
 		addProgressBar(w_vProgressBar, std::string("Unite 3"));
 		addProgressBar(w_vProgressBar, std::string("Unite 4"));
-#if 0
-		// Unite 2 
-		QLabel* w_barU2 = new QLabel(tr("Unite 2"));
-		m_progressBarU2 = new QProgressBar;
-		// 	m_progressBarU2->setMinimum(m_pbarmin);
-		// 	m_progressBarU2->setMaximum(m_pbarmax);
-		//	m_progressBarU2->setValue(1);
-		QVBoxLayout* w_lablandLayout2 = new QVBoxLayout;
-		w_lablandLayout2->addWidget(w_barU2);
-		w_lablandLayout2->addWidget(m_progressBarU2);
-		w_vProgressBar->addStretch(2);
-		w_vProgressBar->addLayout(w_lablandLayout2);
-		
-		// Unite 3
-		QLabel* w_barU3 = new QLabel(tr("Unite 3"));
-		m_progressBarU3 = new QProgressBar;
-		// 	m_progressBarU3->setMinimum(m_pbarmin);
-		// 	m_progressBarU3->setMaximum(m_pbarmax);
-		//	m_progressBarU3->setValue(8);
-		QVBoxLayout* w_lablandLayout3 = new QVBoxLayout;
-		w_lablandLayout3->addWidget(w_barU3);
-		w_lablandLayout3->addWidget(m_progressBarU3);
-		w_vProgressBar->addStretch(2);
-		w_vProgressBar->addLayout(w_lablandLayout3);
-		
-		// Unite 4
-		QLabel* w_barU4 = new QLabel(tr("Unite 4"));
-		m_progressBarU4 = new QProgressBar;
-		QVBoxLayout* w_lablandLayout4 = new QVBoxLayout;
-		w_lablandLayout4->addWidget(w_barU4);
-		w_lablandLayout4->addWidget(m_progressBarU4);
-		w_vProgressBar->addStretch(2);
-		w_vProgressBar->addLayout(w_lablandLayout4);
-		// 	m_progressBarU4->setMinimum(m_pbarmin);
-		// 	m_progressBarU4->setMaximum(m_pbarmax);
-		//	m_progressBarU4->setValue(4);
-
-#endif
 		m_uniteBox->setLayout(w_vProgressBar);
 
 #if 0
@@ -552,9 +688,9 @@ namespace bdGui {
 #endif
 	}
 
-	void TestGuiLayout::addProgressBar( QBoxLayout* aProgressBar, std::string&& aUniteNb)
+	void TestGuiLayout::addProgressBar(QBoxLayout* aProgressBar, const std::string& aUniteNb)
 	{
-		if( QVBoxLayout* w_lablandLayout1 = dynamic_cast<QVBoxLayout*>(aProgressBar))
+		if (QVBoxLayout* w_lablandLayout1 = dynamic_cast<QVBoxLayout*>(aProgressBar))
 		{
 			//std::string w_qstring("Unite 1");
 			QLabel* w_barU1 = new QLabel(tr(aUniteNb.c_str()));
@@ -568,7 +704,7 @@ namespace bdGui {
 			//     w_vProgressBar->addWidget(m_progressBarU1);
 
 			// Both label and button together
-//			QVBoxLayout* w_lablandLayout1 = new QVBoxLayout;
+			//			QVBoxLayout* w_lablandLayout1 = new QVBoxLayout;
 			w_lablandLayout1->addWidget(w_barU1);
 			w_lablandLayout1->addWidget(m_progressBarU1);
 			aProgressBar->addStretch(2);
@@ -576,12 +712,39 @@ namespace bdGui {
 		}
 		else if (QHBoxLayout* w_lablandLayout1 = dynamic_cast<QHBoxLayout*>(aProgressBar))
 		{
-			QLabel* w_barU1 = new QLabel(tr(aUniteNb.c_str()));
-			m_progressBarU1 = new QProgressBar;
-			w_lablandLayout1->addWidget(w_barU1);
-			w_lablandLayout1->addWidget(m_progressBarU1);
-			aProgressBar->addStretch(2);
-			aProgressBar->addLayout(w_lablandLayout1);
+			QLabel* w_barlbl = new QLabel(tr(aUniteNb.c_str()));
+			if( QString::compare( m_listUniteAvailable.at(0), QString(aUniteNb.c_str()))==0)
+			{
+				m_progressBarU1 = new QProgressBar;
+				w_lablandLayout1->addWidget(w_barlbl);
+				w_lablandLayout1->addWidget(m_progressBarU1);
+				aProgressBar->addStretch(2);
+				aProgressBar->addLayout(w_lablandLayout1);
+			}
+			else if (QString::compare(m_listUniteAvailable.at(1), QString(aUniteNb.c_str())) == 0)
+			{
+				m_progressBarU2 = new QProgressBar;
+				w_lablandLayout1->addWidget(w_barlbl);
+				w_lablandLayout1->addWidget(m_progressBarU2);
+				aProgressBar->addStretch(2);
+				aProgressBar->addLayout(w_lablandLayout1);
+			}
+			else if(QString::compare(m_listUniteAvailable.at(2), QString(aUniteNb.c_str())) == 0)
+			{
+				m_progressBarU3 = new QProgressBar;
+				w_lablandLayout1->addWidget(w_barlbl);
+				w_lablandLayout1->addWidget(m_progressBarU3);
+				aProgressBar->addStretch(2);
+				aProgressBar->addLayout(w_lablandLayout1);
+			}
+			else if (QString::compare(m_listUniteAvailable.at(3), QString(aUniteNb.c_str())) == 0)
+			{
+				m_progressBarU4 = new QProgressBar;
+				w_lablandLayout1->addWidget(w_barlbl);
+				w_lablandLayout1->addWidget(m_progressBarU4);
+				aProgressBar->addStretch(2);
+				aProgressBar->addLayout(w_lablandLayout1);
+			}
 		}
 		else
 		{
@@ -621,13 +784,15 @@ namespace bdGui {
 // 		QObject::connect( m_listWidget, SIGNAL(itemChanged(QListWidgetItem*)),
 // 			this, SLOT(highlightChecked(QListWidgetItem*)));
 		//	QObject::connect(m_listWidget, SIGNAL(itemSelectionChanged()),this,SLOT(selectedItem()));
-		QObject::connect( m_listWidget,    SIGNAL(itemClicked()), this, SLOT(clickedItem()));
+//		QObject::connect( m_listWidget,    SIGNAL(itemClicked()), this, SLOT(clickedItem()));
 	//	QObject::connect( m_saveButton, SIGNAL(clicked()),     this, SLOT(save()));
-		QObject::connect( m_closeButton,   SIGNAL(clicked()),     this, SLOT(close()));
-		QObject::connect( m_loadButton,    SIGNAL(clicked()),     this, SLOT(open()));
-		QObject::connect( m_listUnite,     SIGNAL(activated(int)),this, SLOT(currentUniteON()));
-		QObject::connect( m_saveSelectBtn, SIGNAL(clicked()),     this, SLOT(savetest()));
-		QObject::connect( m_tblWidget,     SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(testItemClick(QTableWidgetItem*)));
+	
+		QObject::connect( m_closeButton,    SIGNAL(clicked()),     this, SLOT(close()));
+		QObject::connect( m_loadButton,     SIGNAL(clicked()),     this, SLOT(open()));
+		QObject::connect( m_bonCreateReport,SIGNAL(clicked()),     this, SLOT(createBonReport()));
+		QObject::connect( m_listUnite,      SIGNAL(activated(int)),this, SLOT(currentUniteON()));
+		QObject::connect( m_saveSelectBtn,  SIGNAL(clicked()),     this, SLOT(savetest()));
+		QObject::connect( m_tblWidget,      SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(testItemClick(QTableWidgetItem*)));
 	}
 
 #if 0
