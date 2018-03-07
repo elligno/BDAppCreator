@@ -1,15 +1,17 @@
+// C++ include
 #include <iostream>
 // Qt includes
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QListWidget>
-#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressBar>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
 //
@@ -48,7 +50,8 @@ TestGuiImpl::TestGuiImpl(QWidget *parent)
     }
 }
 
-void TestGuiImpl::createListWidget(){
+void TestGuiImpl::createListWidget()
+{
     m_listWidget = new QListWidget;
     QStringList w_strList;
     w_strList << "Commande_1" << "Commande_2" << "Commande_3" << "Commande_4"

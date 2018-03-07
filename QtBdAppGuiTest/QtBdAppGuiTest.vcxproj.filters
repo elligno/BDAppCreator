@@ -51,15 +51,31 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_TestGuiImpl.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="BasicTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BasicTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BasicTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_testguilayout.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_testguilayout.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TestGuiImpl.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="testguilayout.h">
+    <CustomBuild Include="BasicTest.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </CustomBuild>
+    <CustomBuild Include="testguilayout.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
