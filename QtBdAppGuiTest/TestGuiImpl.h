@@ -9,6 +9,7 @@ class QGroupBox;
 class QPushButton;
 class QListWidget;
 class QProgressBar;
+class QTableWidget;
 class QListWidgetItem;
 class QDialogButtonBox;
 
@@ -37,6 +38,7 @@ private:
     int m_currCount;
     int m_prevCount;
     QListWidget* m_listWidget;
+		QTableWidget* m_tblWidget;
     QDialogButtonBox* m_buttonBox;
     QGroupBox* m_cmdBox;
     QPushButton* m_saveButton;   // when user push this button, report is saved
