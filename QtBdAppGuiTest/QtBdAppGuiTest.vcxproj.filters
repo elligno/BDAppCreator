@@ -34,6 +34,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="BdAPI">
+      <UniqueIdentifier>{4cc30bf6-17c3-4abd-91ed-8f370847869c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

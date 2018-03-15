@@ -35,6 +35,7 @@ class TestGuiLayout : public QDialog
 		void currentUniteON();
 		void createBonReport();
 		void testItemClick(QTableWidgetItem* aItem);
+		void on_pushButton_clicked1();
   private:
 		// struct to hold data (bon livraison report )
 		using tplbonlivraison = std::tuple<QString, QString, double, short>;
@@ -100,6 +101,9 @@ class TestGuiLayout : public QDialog
 		QMultiMap<QString, tplbonlivraison> m_unitBonLivraisonData;
 		QStringList m_listUniteAvailable = { QString("Unit 1"), QString("Unit 2"),
 			QString("Unit 3"), QString("Unit 4"), QString("Unit 5") };
+
+		// QProcess test
+		QPushButton* w_openButton=nullptr;
 };
 }
 #endif // TESTGUILAYOUT_H

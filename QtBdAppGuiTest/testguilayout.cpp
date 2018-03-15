@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
+#include <QFileDialog>
 #include <QComboBox>
 #include <QProcess>
 #include <QLabel>
@@ -488,7 +489,7 @@ namespace bdGui {
 		QPushButton* w_procButton = new QPushButton("Process");
 		QPushButton* w_saveButton = new QPushButton("Save");
 		QPushButton* w_loadButton = new QPushButton("Load");
-		QPushButton* w_openButton = new QPushButton("Open");
+		w_openButton = new QPushButton("Open");
 
 		QHBoxLayout* w_analyzeHbox = new QHBoxLayout;
 		w_analyzeHbox->addWidget(w_procButton);
@@ -516,7 +517,7 @@ namespace bdGui {
 		QVBoxLayout* w_uniteComboBox = new QVBoxLayout;
 		w_uniteComboBox->addWidget(w_listUniteLabl);
 		w_uniteComboBox->addWidget(m_listUnite);
-		w_uniteComboBox->addStretch(3);
+//		w_uniteComboBox->addStretch(3);
 		w_buttonsTop->addLayout(w_uniteComboBox);
 
 		int w_uniteCurrent = m_listUnite->currentIndex(); // user choice
@@ -781,6 +782,9 @@ namespace bdGui {
 
 	void TestGuiLayout::createConnections()
 	{
+		// just testing 
+		QObject::connect( w_openButton, SIGNAL(clicked()), this, SLOT(on_pushButton_clicked1()));
+
 // 		QObject::connect( m_listWidget, SIGNAL(itemChanged(QListWidgetItem*)),
 // 			this, SLOT(highlightChecked(QListWidgetItem*)));
 		//	QObject::connect(m_listWidget, SIGNAL(itemSelectionChanged()),this,SLOT(selectedItem()));
@@ -795,19 +799,98 @@ namespace bdGui {
 		QObject::connect( m_tblWidget,      SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(testItemClick(QTableWidgetItem*)));
 	}
 
-#if 0
+	// pdf2txt.py [options] filename.pdf
+// Options:
+// 	-o output file name
+// 	- p comma - separated list of page numbers to extract
+// 	- t output format(text / html / xml / tag[for Tagged PDFs])
+// 	- O dirname(triggers extraction of images from PDF into directory)
+// 	- P password
 	void TestGuiLayout::on_pushButton_clicked1()
 	{
-		QProcess p;
-		QStringList params;
+		// some usefull path
+ 		const QString pythonScript = R"(F:\EllignoContract\BoDuc\pdfminerTxt\pdfminer-20140328\build/scripts-2.7\pdf2txt.py)";
+		const QString w_pdfilesPath = R"(F:\EllignoContract\BoDuc\QtBdAppGuiTest\QtBdAppGuiTest\Pdf2Text\)"; // pdf files folder
 
-		params << "script.py -arg1 arg1";
-		p.start("python", params);
-		p.waitForFinished(-1);
-		QString p_stdout = p.readAll();
-		ui->lineEdit->setText(p_stdout);
+		QProcess w_process(this);
+		QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+		env.insert("PYTHONPATH", "C:\\Python27\\Lib");
+		env.insert("PYTHONHOME", "C:\\Python27");
+		w_process.setProcessEnvironment(env);
+		// Sets the working directory to dir. QProcess will start the process in this directory.
+		// The default behavior is to start the process in the working directory of the calling process.
+		w_process.setWorkingDirectory(w_pdfilesPath); // otherwise set path working dir of app
+
+		//QStringList params;
+// 		QString w_testArgStr("desilets.pdf");
+// 		QString w_tesTxtFile("desilets.txt");
+// 		QString w_ofile("-o");
+// 		QString w_txtTest = w_ofile + " " + w_pdfilesPath + w_tesTxtFile;
+// 		QString w_argPDF = w_pdfilesPath + w_testArgStr;
+
+		// params << "script.py -arg1 arg1"; example
+	//	params << pythonScript << "desilets.pdf"; // "pdf2txt.py -o qtpdf2test.txt desilets.pdf";
+		QStringList w_selectedFiles = QFileDialog::getOpenFileNames(
+			this,
+			"Select one or more files to open",
+			w_pdfilesPath,
+			"Text (*.pdf *.txt)");
+
+		// String list contains the whole path
+// 		QFileInfo w_fileInfo(w_selectedFiles.front());
+// 		QString w_fname = w_fileInfo.fileName();
+// 		QString w_bname = w_fileInfo.baseName();
+//		QString w_extFile = w_fileInfo.suffix();
+// 		QString w_complPdfFile = w_fname; // filename with corresponding extension
+// 		QString w_complTxtFile = w_bname + ".txt";
+// 		QString w_ofile("-o");
+// 		QString w_txtTest = w_ofile + " " + w_pdfilesPath + w_tesTxtFile;
+// 		QString w_argPDF = w_pdfilesPath + w_testArgStr;
+// ***************** this cmd works ***********************
+//  params << pythonScript << "-o desilets.txt" << "desilets.pdf";
+	
+    // now we go each file and convert
+		QStringListIterator filesListIterator( w_selectedFiles);
+		while( filesListIterator.hasNext())
+		{
+			// String list contains the whole path
+			QFileInfo w_fileInfo(filesListIterator.next());
+			QString w_fname = w_fileInfo.fileName();
+			QString w_bname = w_fileInfo.baseName();
+			QString w_complPdfFile = w_fname; // filename with corresponding extension
+			QString w_complTxtFile = w_bname + ".txt";
+			QString w_ofile("-o");
+			QStringList params;
+			//w_process.start("Python", params);
+//			QStringList params;
+			//std::cout << filesListIterator.next().constData() << std::endl;
+			params << pythonScript << w_ofile + " " + w_complTxtFile << w_complPdfFile;
+
+			// ...
+			w_process.start("Python", params);
+			if (w_process.waitForFinished(-1))
+			{
+				QByteArray p_stdout = w_process.readAll();
+				QByteArray p_stderr = w_process.readAllStandardError();
+				if (!p_stderr.isEmpty())
+					std::cout << "Python error:" << p_stderr.data();
+				//		qDebug() << "Python result=" << p_stdout;
+				if (!p_stdout.isEmpty())
+				{
+					std::cout << "Python conversion:" << p_stdout.data();
+				}
+				p_stdout; // write to console
+			}
+			// kill process
+			w_process.close();
+		}
+		// kill process
+//		w_process.close();
+
+		std::cout << "Finished conversion pdf of text\n";
+	//	ui->lineEdit->setText(p_stdout);
 	}
-
+#if 0
 	// path: you can set your own path
 	//command: in which program you want to run(in this case python)
 	// params : the script you want to be executed

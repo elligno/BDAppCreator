@@ -245,3 +245,14 @@ ModelManifest.xml
 /QtTestPdfExtract/QtTestPdfExtract.vcxproj.filters
 /QtTestPdfExtract/jani3156_2.txt
 /QtTestPdfExtract/Suivicamionjour2.txt
+/QtBdAppGuiTest/Pdf2Text/Pdfs/desilets.pdf
+/QtBdAppGuiTest/Pdf2Text/jeanTest2.pdf
+/QtBdAppGuiTest/ desilets.txt
+/QtBdAppGuiTest/ qtpdf2text.txt
+/QtBdAppGuiTest/testqtpdf.txt
+/QtBdAppGuiTest/Pdf2Text
+*.pdf, *.txt
+/QtBdAppGuiTest/desilets_last.txt
+/QtBdAppGuiTest/desilets.txt
+/QtBdAppGuiTest/desilets.pdf
+/QtBdAppGuiTest/Suivicamionjour.pdf
